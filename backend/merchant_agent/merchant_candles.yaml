@@ -1,0 +1,26 @@
+merchant:
+  id: "candles_sneha_002"
+  name: "Sneha's Soy Candles"
+  description: "Artisanal soy wax candles from Pune"
+
+inventory:
+  - id: "candle_001"
+    name: "Hand-poured Soy Candle"
+    description: "Lavender scented 200g soy candle"
+    base_price_paise: 25000
+    floor_price_paise: 20000
+    stock: 30
+    variants: ["lavender", "vanilla", "sandalwood"]
+
+bundle_rules:
+  - id: "candle_bundle"
+    name: "Candle Bundle"
+    description: "Buy 3 candles, get 15% off"
+    item_ids: ["candle_001"]
+    min_quantity: 3
+    discount_type: "PERCENT"
+    discount_value: 15
+
+guardrails:
+  - "Never sell below floor price"
+  - "Do not negotiate more than 2 rounds"

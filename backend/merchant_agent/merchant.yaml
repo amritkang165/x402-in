@@ -1,0 +1,51 @@
+merchant:
+  id: "pottery_rahul_001"
+  name: "Rahul's Handmade Pottery"
+  description: "Handcrafted ceramic mugs and bowls from Bangalore"
+
+inventory:
+  - id: "mug_001"
+    name: "Handmade Ceramic Mug"
+    description: "350ml ceramic mug, hand-painted"
+    base_price_paise: 30000
+    floor_price_paise: 25000
+    stock: 15
+    variants: ["blue", "brown", "white"]
+
+  - id: "bowl_001"
+    name: "Handmade Ceramic Bowl"
+    description: "500ml serving bowl, glazed finish"
+    base_price_paise: 45000
+    floor_price_paise: 38000
+    stock: 8
+    variants: ["blue", "brown"]
+
+  - id: "plate_001"
+    name: "Ceramic Dinner Plate"
+    description: "25cm dinner plate, matte finish"
+    base_price_paise: 20000
+    floor_price_paise: 16000
+    stock: 20
+    variants: ["white", "cream"]
+
+bundle_rules:
+  - id: "mug_bundle"
+    name: "Mug Bundle"
+    description: "Buy 2 mugs, get 10% off"
+    item_ids: ["mug_001"]
+    min_quantity: 2
+    discount_type: "PERCENT"
+    discount_value: 10
+
+  - id: "combo_deal"
+    name: "Combo Deal"
+    description: "Mug + Bowl combo, get Rs. 50 off"
+    item_ids: ["mug_001", "bowl_001"]
+    min_quantity: 1
+    discount_type: "FIXED"
+    discount_value: 5000
+
+guardrails:
+  - "Never sell below floor price"
+  - "Always offer bundle if applicable"
+  - "Do not negotiate more than 2 rounds"
