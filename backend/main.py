@@ -8,6 +8,7 @@ from backend.registry.router import router as registry_router
 from backend.settlement.webhooks import router as webhook_router
 from backend.theatre.router import router as theatre_router
 from backend.theatre.websocket_manager import manager
+from backend.config import settings
 
 app = FastAPI(title="x402-IN Agentic Commerce Gateway")
 
@@ -29,3 +30,13 @@ app.include_router(theatre_router)
 def on_startup():
     init_db()
     manager.set_loop(asyncio.get_event_loop())
+
+
+@app.get("/")
+def root():
+    return {
+        "service": "x402-in",
+        "protocol_version": "0.1.0",
+        "payment_method": "mock" if not settings.razorpay_enabled else "razorpay",
+        "docs": "/docs",
+    }
