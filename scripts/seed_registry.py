@@ -22,9 +22,24 @@ MERCHANTS = [
 ]
 
 
+# LLM-powered merchant (plain text -> OpenAI -> validated catalog).
+# Only register this if you run the merchant with `--llm` on port 8003.
+LLM_MERCHANT = {
+    "merchant_id": "spices_meera_003",
+    "merchant_name": "Meera's Spice Emporium",
+    "endpoint_url": "http://localhost:8003",
+    "description": "Artisanal spice blends and teas from Kerala (LLM-built catalog)",
+    "categories": ["spices", "groceries"],
+}
+
+
 def seed():
+    import sys
+    merchants = list(MERCHANTS)
+    if "--with-llm" in sys.argv:
+        merchants.append(LLM_MERCHANT)
     with httpx.Client(timeout=5.0) as client:
-        for m in MERCHANTS:
+        for m in merchants:
             resp = client.post(f"{BASE}/registry/register", json=m)
             print(resp.status_code, resp.json())
 
