@@ -20,12 +20,20 @@ class Settings:
     RAZORPAY_KEY_ID: str | None = os.getenv("RAZORPAY_KEY_ID")
     RAZORPAY_KEY_SECRET: str | None = os.getenv("RAZORPAY_KEY_SECRET")
 
+    OPENAI_API_KEY: str | None = os.getenv("OPENAI_API_KEY")
+    OPENAI_MODEL: str = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+
     @property
     def razorpay_enabled(self) -> bool:
         return bool(self.RAZORPAY_KEY_ID and self.RAZORPAY_KEY_SECRET)
 
     @property
+    def openai_enabled(self) -> bool:
+        return bool(self.OPENAI_API_KEY)
+
+    @property
     def database_path(self) -> Path:
+        # sqlite:///./x402_in.db -> path component after the scheme
         return Path(self.DATABASE_URL.split("sqlite:///", 1)[-1])
 
 
