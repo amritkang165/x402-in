@@ -1,0 +1,45 @@
+merchant:
+  id: "llm_demo_003"
+  name: "Meera's Spice Emporium"
+  description: "Artisanal spice blends and teas from Kerala"
+
+# The merchant's plain-English inventory. The LLM structuralizes this into
+# a machine-readable catalog; the floor_prices below remain authoritative.
+plain_text_catalog: |
+  I sell handcrafted spices and organic teas.
+  - Cardamom Pods, 50g box: list price Rs. 250, I have 40 boxes.
+  - Saffron threads, 2g: list price Rs. 500, 20 in stock. Variants: Premium, Organic.
+  - Masala Chai blend, 200g: list price Rs. 320, 35 bags. Variants: Classic, Ginger.
+  - Black Pepper, 100g: Rs. 180, 50 packs. Variants: Whole, Ground.
+  - Organic Green Tea, 100g: Rs. 220, 25 boxes.
+
+# Authoritative guardrails (in paise). Code clamps any LLM-suggested base
+# price below these, and negotiation will never sell below them.
+floor_prices_paise:
+  cardamom_pods: 20000      # Rs. 200
+  saffron_threads: 45000    # Rs. 450
+  masala_chai: 28000        # Rs. 280
+  black_pepper: 15000       # Rs. 150
+  organic_green_tea: 19000  # Rs. 190
+
+bundle_rules:
+  - id: "spice_bundle"
+    name: "Spice Bundle"
+    description: "Buy 3 spice bags, get 10% off"
+    item_ids: ["cardamom_pods", "saffron_threads", "black_pepper"]
+    min_quantity: 3
+    discount_type: "PERCENT"
+    discount_value: 10
+
+  - id: "tea_combo"
+    name: "Tea Combo"
+    description: "Masala Chai + Green Tea combo, Rs. 30 off"
+    item_ids: ["masala_chai", "organic_green_tea"]
+    min_quantity: 2
+    discount_type: "FIXED"
+    discount_value: 3000
+
+guardrails:
+  - "Never sell below floor price"
+  - "Always offer bundle if applicable"
+  - "Do not negotiate more than 2 rounds"
