@@ -4,3 +4,5 @@ pydantic>=2.10
 httpx>=0.27
 python-dotenv>=1.0
 pyyaml>=6.0
+openai>=1.35
+razorpay>=1.4
