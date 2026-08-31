@@ -75,6 +75,11 @@ async def razorpay_webhook(request: Request, x_razorpay_signature: str):
             session = conn.execute(
                 "SELECT * FROM sessions WHERE razorpay_order_id=?", (refs["order_id"],)
             ).fetchone()
+        if session is None and refs["payment_link_id"]:
+            session = conn.execute(
+                "SELECT * FROM sessions WHERE razorpay_payment_link_id=?",
+                (refs["payment_link_id"],),
+            ).fetchone()
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
 
