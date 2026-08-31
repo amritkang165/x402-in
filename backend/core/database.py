@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS sessions (
     settled_at TEXT,
     final_amount_paise INTEGER,
     razorpay_order_id TEXT,
+    razorpay_payment_link_id TEXT,
     razorpay_payment_id TEXT
 );
 
@@ -81,6 +82,29 @@ def init_db() -> None:
     conn = get_connection()
     try:
         conn.executescript(SCHEMA)
+        _migrate(conn)
         conn.commit()
+    finally:
+        conn.close()
+
+
+def _migrate(conn: sqlite3.Connection) -> None:
+    """Idempotent column adds for existing databases."""
+    cols = {r["name"] for r in conn.execute("PRAGMA table_info(sessions)").fetchall()}
+    if "razorpay_payment_link_id" not in cols:
+        conn.execute(
+            "ALTER TABLE sessions ADD COLUMN razorpay_payment_link_id TEXT"
+        )
+
+
+@contextmanager
+def db_session():
+    conn = get_connection()
+    try:
+        yield conn
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
     finally:
         conn.close()
