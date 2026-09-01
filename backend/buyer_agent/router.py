@@ -1,4 +1,6 @@
 import asyncio
+import hmac
+import secrets
 import uuid
 
 from fastapi import APIRouter, HTTPException
@@ -22,7 +24,9 @@ class SearchBody(BuyerIntent):
 @router.post("/search")
 async def search(body: SearchBody):
     session_id = uuid.uuid4().hex
-    _searches[session_id] = {"status": "RUNNING", "result": None}
+    buyer_token = secrets.token_urlsafe(32)
+    _searches[session_id] = {"status": "RUNNING", "result": None,
+                             "buyer_token": buyer_token}
     agent = get_agent()
 
     async def run():
@@ -36,7 +40,7 @@ async def search(body: SearchBody):
 
     task = asyncio.create_task(run())
     _searches[session_id]["task"] = task
-    return {"session_id": session_id, "status": "RUNNING"}
+    return {"session_id": session_id, "status": "RUNNING", "buyer_token": buyer_token}
 
 
 @router.get("/session/{session_id}")
@@ -64,6 +68,18 @@ def approve(session_id: str, body: dict):
     buyer_email = body.get("buyer_email", "buyer@example.com")
     if not offer_id:
         raise HTTPException(status_code=400, detail="offer_id required")
+
+    provided_token = body.get("buyer_token")
+    search = _searches.get(session_id)
+    expected = search.get("buyer_token") if search else None
+    if not provided_token or not expected or not hmac.compare_digest(
+        provided_token, expected
+    ):
+        raise HTTPException(
+            status_code=403,
+            detail="Invalid or expired buyer_token (from the /buyer/search response)",
+        )
+
     req = SettlementRequest(
         session_id=session_id,
         offer_id=offer_id,
