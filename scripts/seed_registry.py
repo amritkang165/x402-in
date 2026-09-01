@@ -1,4 +1,5 @@
 import os
+import sys
 
 import httpx
 
@@ -21,7 +22,6 @@ MERCHANTS = [
     },
 ]
 
-
 # LLM-powered merchant (plain text -> OpenAI -> validated catalog).
 # Only register this if you run the merchant with `--llm` on port 8003.
 LLM_MERCHANT = {
@@ -32,12 +32,23 @@ LLM_MERCHANT = {
     "categories": ["spices", "groceries"],
 }
 
+# A "dead" merchant: registered in the registry but no server is listening on
+# its port. Used to demo graceful timeout/error isolation during negotiation.
+DEAD_MERCHANT = {
+    "merchant_id": "dead_shop_999",
+    "merchant_name": "Nikhil's Van (offline)",
+    "endpoint_url": "http://localhost:8004",
+    "description": "A merchant that is not currently reachable",
+    "categories": ["demo"],
+}
+
 
 def seed():
-    import sys
     merchants = list(MERCHANTS)
     if "--with-llm" in sys.argv:
         merchants.append(LLM_MERCHANT)
+    if "--with-dead" in sys.argv:
+        merchants.append(DEAD_MERCHANT)
     with httpx.Client(timeout=5.0) as client:
         for m in merchants:
             resp = client.post(f"{BASE}/registry/register", json=m)
