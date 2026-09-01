@@ -29,6 +29,13 @@ const ACTOR_COLORS: Record<string, string> = {
   razorpay: 'bg-purple-100 border-purple-300',
 }
 
+const STATUS_COLORS: Record<string, string> = {
+  OFFER: 'bg-green-100 border-green-300',
+  COUNTER: 'bg-amber-100 border-amber-300',
+  REJECT: 'bg-red-100 border-red-300',
+  TIMEOUT: 'bg-slate-100 border-slate-300 border-dashed',
+  ERROR: 'bg-slate-100 border-slate-300',
+}
 
 export default function TheatrePage() {
   const [sessions, setSessions] = useState<any[]>([])
@@ -86,6 +93,9 @@ export default function TheatrePage() {
   }
 
   function color(e: LiveEvent) {
+    if (e.action_type === 'NEGOTIATION') {
+      return STATUS_COLORS[e.details?.status] || STATUS_COLORS.ERROR
+    }
     return ACTOR_COLORS[e.actor] || ACTOR_COLORS.system
   }
 
@@ -166,6 +176,14 @@ export default function TheatrePage() {
 }
 
 function colorAudit(e: AuditEntry) {
+  if (e.action_type === 'NEGOTIATION_RESULT') {
+    try {
+      const status = JSON.parse(e.details)?.status
+      return STATUS_COLORS[status] || STATUS_COLORS.ERROR
+    } catch {
+      /* fall through */
+    }
+  }
   return ACTOR_COLORS[e.actor] || ACTOR_COLORS.system
 }
 
