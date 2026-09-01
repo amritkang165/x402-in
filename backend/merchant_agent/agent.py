@@ -36,12 +36,22 @@ class MerchantAgent:
         alternatives = []
         for req in requested:
             item = self.items.get(req.item_id)
-            if item and item.floor_price_paise > (max_budget_paise or float("inf")):
+            if item is None:
                 alternatives.append({
                     "item_id": req.item_id,
-                    "quantity": max(1, req.quantity // 2),
-                    "reason": "Reduce quantity to fit budget",
+                    "quantity": req.quantity,
+                    "reason": "Item not in my catalog",
                 })
+                continue
+            line_total = item.base_price_paise * req.quantity
+            if max_budget_paise is not None and line_total <= max_budget_paise:
+                continue  # this line fits the budget as-is
+            reduced_qty = max(1, req.quantity // 2)
+            alternatives.append({
+                "item_id": req.item_id,
+                "quantity": reduced_qty,
+                "reason": "Reduce quantity to fit budget",
+            })
         return alternatives
 
     def negotiate(self, request) -> NegotiateResponse:
