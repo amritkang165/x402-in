@@ -51,6 +51,7 @@ export default function BuyerPage() {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<Result | null>(null)
   const [sessionId, setSessionId] = useState('')
+  const [buyerToken, setBuyerToken] = useState('')
   const [payLink, setPayLink] = useState('')
   const [auditMsg, setAuditMsg] = useState('')
 
@@ -70,6 +71,7 @@ export default function BuyerPage() {
     try {
       const { data } = await axios.post('/buyer/search', body)
       setSessionId(data.session_id)
+      setBuyerToken(data.buyer_token)
       poll(data.session_id)
     } catch (e: any) {
       setResult({ status: 'ERROR', recommendation: e?.response?.data?.detail || 'Search failed' })
@@ -104,6 +106,7 @@ export default function BuyerPage() {
       offer_id: offerId,
       buyer_id: 'priya_demo',
       buyer_email: 'priya@example.com',
+      buyer_token: buyerToken,
     })
     if (data.payment_link && data.payment_link.startsWith('mock://')) {
       await axios.post('/webhooks/mock/notify', { session_id: sessionId, payment_status: 'captured' })
