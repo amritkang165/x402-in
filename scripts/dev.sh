@@ -9,6 +9,14 @@ mkdir -p "$LOG"
 
 echo "Starting x402-IN dev stack..."
 
+# Kill anything already on our ports for a clean start
+for p in 8000 8001 8002 8003 5173; do
+  if lsof -tiTCP:$p -sTCP:LISTEN >/dev/null 2>&1; then
+    lsof -tiTCP:$p -sTCP:LISTEN | xargs kill -9 2>/dev/null
+    echo "  freed port $p"
+  fi
+done
+
 source venv/bin/activate
 
 # 1. Central gateway (buyer + registry + settlement + theatre)
