@@ -9,7 +9,6 @@ export default defineConfig({
       '/buyer': 'http://localhost:8000',
       '/registry': 'http://localhost:8000',
       '/webhooks': 'http://localhost:8000',
-      '/theatre': 'http://localhost:8000',
       '/sessions': 'http://localhost:8000',
       '/ws': { target: 'ws://localhost:8000', ws: true },
     },
