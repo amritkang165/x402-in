@@ -331,8 +331,8 @@ export default function BuyerPage() {
                     className="flex w-full flex-col items-stretch text-left"
                     onClick={() => requestItem(item.id)}
                   >
-                    <div className="flex items-center justify-center py-5">
-                      <ProductArt kind={item.art} size={120} />
+                    <div className="aspect-[4/3] w-full overflow-hidden bg-gray-100">
+                      <ProductArt kind={item.art} size={0} className="h-full w-full" />
                     </div>
                     <div className="border-t border-gray-100 p-4">
                       {item.tag && <div className="tag mb-1 bg-brand-50 text-brand-700">{item.tag}</div>}
