@@ -21,9 +21,6 @@ class MerchantAgent:
         self.bundles = [BundleRule(**b) for b in bundle_rules]
         self.max_rounds = max_rounds
 
-    def _reserved_qty(self, item_id: str, session_id: str) -> int:
-        raise NotImplementedError
-
     def catalog(self) -> CatalogResponse:
         return CatalogResponse(
             merchant_id=self.id,

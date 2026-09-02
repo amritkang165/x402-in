@@ -1,6 +1,7 @@
 import { Routes, Route, Link } from 'react-router-dom'
 import BuyerPage from './pages/BuyerPage'
 import TheatrePage from './pages/TheatrePage'
+import SuccessPage from './pages/SuccessPage'
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<BuyerPage />} />
           <Route path="/theatre" element={<TheatrePage />} />
+          <Route path="/success" element={<SuccessPage />} />
         </Routes>
       </main>
     </div>

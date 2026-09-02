@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 interface Alternative {
@@ -46,6 +47,7 @@ const STATUS_META: Record<string, { label: string; border: string; chip: string;
 }
 
 export default function BuyerPage() {
+  const navigate = useNavigate()
   const [query, setQuery] = useState('')
   const [budget, setBudget] = useState('600')
   const [loading, setLoading] = useState(false)
@@ -111,6 +113,8 @@ export default function BuyerPage() {
     if (data.payment_link && data.payment_link.startsWith('mock://')) {
       await axios.post('/webhooks/mock/notify', { session_id: sessionId, payment_status: 'captured' })
       setPayLink('CAPTURED')
+      const offer = result?.all_offers?.find((o) => o.offer_id === offerId)
+      navigate('/success', { state: { session_id: sessionId, offer } })
     } else if (data.payment_link) {
       window.open(data.payment_link, '_blank')
       setPayLink(data.payment_link)

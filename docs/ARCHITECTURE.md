@@ -139,6 +139,8 @@ loop. Every message is a `make_event()` envelope with a dedupe id.
   bubbles (OFFER green / REJECT red w/ suggested-alternative chips / COUNTER
   amber / TIMEOUT dashed), `Buy` → approve → opens payment link (mock auto-
   captures, real opens Razorpay checkout).
+- `SuccessPage` — post-payment confirmation (`/success`): shows the paid merchant,
+  amount, and a live audit-verify result; links back to Theatre / new purchase.
 - `TheatrePage` — live WebSocket feed (`/ws/theatre/*`, reconnect + dedupe,
   bubbles colored by negotiation status), session list with audit chain + Verify.
 - Vite dev proxy forwards `/ws` (ws:true) and `/buyer`, `/registry`, etc. to
