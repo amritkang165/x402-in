@@ -58,4 +58,10 @@
   .card-title {
     @apply font-mono text-[11px] uppercase tracking-[0.2em] text-slate-500;
   }
+  .btn-buy {
+    @apply btn bg-gradient-to-r from-accent to-violet text-ink-950 font-bold shadow-glow hover:brightness-110 active:scale-[0.99];
+  }
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold;
+  }
 }
