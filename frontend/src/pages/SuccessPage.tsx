@@ -9,7 +9,8 @@ export default function SuccessPage() {
   useEffect(() => {
     if (!state?.session_id) return
     let cancelled = false
-    axios.get(`/buyer/session/${state.session_id}/audit/verify`)
+    axios
+      .get(`/buyer/session/${state.session_id}/audit/verify`)
       .then(({ data }) => { if (!cancelled) setAuditMsg(data.message) })
       .catch(() => {})
     return () => { cancelled = true }
@@ -20,37 +21,36 @@ export default function SuccessPage() {
   const amount = offer?.pricing?.total_paise != null ? (offer.pricing.total_paise / 100).toFixed(2) : '—'
 
   return (
-    <div className="max-w-xl mx-auto">
-      <div className="bg-white rounded-xl shadow p-8 text-center">
-        <div className="text-6xl mb-4">🎉</div>
-        <h1 className="text-3xl font-bold text-green-600 mb-2">Payment successful</h1>
-        <p className="text-slate-600 mb-6">
-          Your deal with <strong>{merchant}</strong> is confirmed. The session is marked
-          <strong className="text-green-600"> PAID</strong>.
+    <div className="mx-auto max-w-xl">
+      <div className="panel p-8 text-center">
+        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-mint/40 bg-mint/10 text-3xl shadow-glow-mint">
+          ✓
+        </div>
+        <h1 className="font-mono text-2xl font-bold tracking-tight text-mint">Payment successful</h1>
+        <p className="mt-2 text-slate-300">
+          Your deal with <strong className="text-white">{merchant}</strong> is confirmed. The session
+          is marked <strong className="text-mint">PAID</strong>.
         </p>
 
-        <div className="grid grid-cols-2 gap-4 my-6 text-left">
-          <div className="bg-slate-50 rounded-lg p-4">
-            <div className="text-xs text-slate-500 uppercase tracking-wide mb-1">Amount paid</div>
-            <div className="text-2xl font-bold">Rs. {amount}</div>
+        <div className="my-6 grid grid-cols-2 gap-4 text-left">
+          <div className="rounded-xl border border-ink-700 bg-ink-850 p-4">
+            <div className="card-title mb-1">Amount paid</div>
+            <div className="font-mono text-2xl font-bold text-white">Rs. {amount}</div>
           </div>
-          <div className="bg-slate-50 rounded-lg p-4">
-            <div className="text-xs text-slate-500 uppercase tracking-wide mb-1">Audit chain</div>
-            <div className="text-sm text-slate-700">{auditMsg || 'Verifying…'}</div>
+          <div className="rounded-xl border border-ink-700 bg-ink-850 p-4">
+            <div className="card-title mb-1">Audit chain</div>
+            <div className="flex items-center gap-1 text-sm text-slate-300">
+              <span className="text-mint">✓</span>
+              {auditMsg || 'Verifying…'}
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center justify-center gap-3">
-          <Link
-            to="/theatre"
-            className="border border-indigo-500 text-indigo-600 rounded-lg px-4 py-2 hover:bg-indigo-50"
-          >
+        <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <Link to="/theatre" className="btn-ghost">
             View Negotiation Theatre
           </Link>
-          <Link
-            to="/"
-            className="bg-indigo-600 text-white rounded-lg px-4 py-2 hover:bg-indigo-700"
-          >
+          <Link to="/" className="btn-primary">
             New purchase
           </Link>
         </div>
