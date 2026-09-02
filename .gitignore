@@ -6,3 +6,4 @@ venv/
 *.sqlite
 node_modules/
 dist/
+.DS_Store
