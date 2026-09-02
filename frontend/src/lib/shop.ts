@@ -83,6 +83,73 @@ export const MERCHANT_META: Record<string, { rating: number; reviews: string; ci
   },
 }
 
+export type Category = 'mugs' | 'tableware' | 'candles'
+
+export interface Product {
+  id: string
+  itemId: string
+  name: string
+  desc: string
+  pricePaise: number
+  mrpPaise: number
+  image: string
+  category: Category
+  merchant: string
+  rating: number
+  reviews: string
+  sold: string
+  tag?: string
+  swatches?: string[]
+}
+
+const P = (id: string, itemId: string, name: string, desc: string, pricePaise: number, mrpPaise: number, image: string, category: Category, merchant: string, tag?: string, swatches?: string[], sold = '', rating = 4.5): Product => ({
+  id,
+  itemId,
+  name,
+  desc,
+  pricePaise,
+  mrpPaise,
+  image,
+  category,
+  merchant,
+  rating,
+  reviews: rating >= 4.6 ? `${Math.round(rating * 80 + 60)} ratings` : `${Math.round(rating * 80 + 40)} ratings`,
+  sold: sold || `${Math.round(rating * 400 + 180)} sold`,
+  tag,
+  swatches,
+})
+
+export const PRODUCTS: Product[] = [
+  // Mugs
+  P('mug_natural', 'mug_001', 'Stoneware mug, natural glaze', 'Hand-thrown, speckled finish. 350 ml.',
+    30000, 39900, '/images/mug.jpg', 'mugs', 'pottery_rahul_001', 'Bestseller', ['#c8b89a', '#8a7a5a'], '1.8k sold', 4.7),
+  P('mug_blue', 'mug_001', 'Ceramic mug, sea blue', 'Matte blue glaze, food-safe. 350 ml.',
+    32000, 44900, '/images/mug2.jpg', 'mugs', 'pottery_rahul_001', undefined, ['#2b6cb0', '#63b3ed'], '940 sold', 4.5),
+  P('mug_terra', 'mug_001', 'Terracotta mug, hand-painted', 'Ochre glazed mug with hand-painted rings. 300 ml.',
+    34000, 47900, '/images/mug2.jpg', 'mugs', 'pottery_rahul_001', 'New', ['#c05b2e', '#e08b4a'], '310 sold', 4.4),
+  // Tableware
+  P('bowl_cream', 'bowl_001', 'Serving bowl, cream', 'Stoneware, 8 inch. For salads and soups.',
+    45000, 59900, '/images/bowl.jpg', 'tableware', 'pottery_rahul_001', undefined, ['#efe6d8'], '430 sold', 4.6),
+  P('bowl_green', 'bowl_001', 'Serving bowl, sage', 'Speckled matte glaze. 8 inch.',
+    48000, 64900, '/images/bowl2.jpg', 'tableware', 'pottery_rahul_001', undefined, ['#8a9a5b'], '210 sold', 4.5),
+  P('plate_dinner', 'plate_001', 'Dinner plate, 10 inch', 'Dishwasher safe, hand-finished rim.',
+    20000, 29900, '/images/plate.jpg', 'tableware', 'pottery_rahul_001', 'Bestseller', ['#f5f3ef'], '870 sold', 4.6),
+  // Candles
+  P('candle_vanilla', 'candle_001', 'Soy candle, vanilla & cedar', 'Cotton wick, 45 hr burn.',
+    25000, 34900, '/images/candle.jpg', 'candles', 'candles_sneha_002', 'Bestseller', [], '2.3k sold', 4.8),
+  P('candle_mint', 'candle_001', 'Soy candle, sea salt & mint', 'Hand-poured, cool scent. 40 hr burn.',
+    26000, 36900, '/images/candle2.jpg', 'candles', 'candles_sneha_002', undefined, [], '760 sold', 4.6),
+  P('candle_amber', 'candle_001', 'Soy candle, amber & sandalwood', 'Warm evening scent. 45 hr burn.',
+    28000, 39900, '/images/candle.jpg', 'candles', 'candles_sneha_002', 'New', [], '180 sold', 4.4),
+]
+
+export const CATEGORIES: { id: Category | 'all'; label: string }[] = [
+  { id: 'all', label: 'All' },
+  { id: 'mugs', label: 'Mugs' },
+  { id: 'tableware', label: 'Tableware' },
+  { id: 'candles', label: 'Candles' },
+]
+
 export function merchantName(id: string): string {
   return FALLBACK_MERCHANTS[id] ?? id
 }
