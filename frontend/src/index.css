@@ -5,26 +5,24 @@
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
   body {
-    @apply bg-ink-950 text-slate-200 font-sans;
-  }
-
-  /* Smooth dark scrollbars */
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: #262c44 transparent;
+    @apply bg-gray-50 text-gray-900 font-sans;
   }
   *::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
   }
   *::-webkit-scrollbar-thumb {
-    background: #262c44;
+    background: #d1d5db;
     border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
   }
   *::-webkit-scrollbar-thumb:hover {
-    background: #3b4260;
+    background: #9ca3af;
+    background-clip: content-box;
   }
   *::-webkit-scrollbar-track {
     background: transparent;
@@ -32,36 +30,30 @@
 }
 
 @layer components {
-  .panel {
-    @apply rounded-2xl border border-ink-700 bg-ink-900/80 backdrop-blur-sm;
+  .card {
+    @apply rounded-xl border border-gray-200 bg-white;
   }
   .input {
-    @apply w-full rounded-lg border border-ink-600 bg-ink-850 px-3 py-2 text-sm text-slate-100
-      placeholder-slate-500 outline-none transition focus:border-accent focus:ring-1 focus:ring-accent;
+    @apply w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900
+      placeholder-gray-400 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20;
   }
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium
       transition disabled:cursor-not-allowed disabled:opacity-50;
   }
   .btn-primary {
-    @apply btn bg-accent text-ink-950 shadow-glow hover:brightness-110 active:scale-[0.99];
+    @apply btn bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800;
   }
   .btn-ghost {
-    @apply btn border border-ink-600 text-slate-200 hover:border-accent/60 hover:text-accent;
+    @apply btn border border-gray-300 bg-white text-gray-700 hover:border-gray-400 hover:bg-gray-50;
   }
-  .btn-mint {
-    @apply btn bg-mint text-ink-950 shadow-glow-mint hover:brightness-110 active:scale-[0.99];
+  .btn-outline {
+    @apply btn border border-gray-300 bg-white text-gray-700 hover:bg-gray-50;
   }
-  .chip {
-    @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold;
+  .tag {
+    @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium;
   }
-  .card-title {
-    @apply font-mono text-[11px] uppercase tracking-[0.2em] text-slate-500;
-  }
-  .btn-buy {
-    @apply btn bg-gradient-to-r from-accent to-violet text-ink-950 font-bold shadow-glow hover:brightness-110 active:scale-[0.99];
-  }
-  .badge {
-    @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold;
+  .eyebrow {
+    @apply text-xs font-medium uppercase tracking-wide text-gray-500;
   }
 }

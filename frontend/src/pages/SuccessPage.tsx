@@ -20,108 +20,63 @@ export default function SuccessPage() {
 
   const offer = state?.offer
   const sessionId = state?.session_id ?? ''
-  const shortId = sessionId.slice(0, 12)
+  const shortId = sessionId.slice(0, 10)
   const merchant = offer?.merchant_id ? merchantName(offer.merchant_id) : '—'
   const total = offer?.pricing?.total_paise ?? 0
   const items = (offer?.items ?? []) as { item_id: string; quantity: number }[]
   const discounts = (offer?.pricing?.discounts ?? []) as { rule: string; amount_paise: number }[]
-  const subtotal = offer?.pricing?.subtotal_paise ?? 0
-
-  const steps = [
-    { label: 'Negotiated', done: true },
-    { label: 'Approved', done: true },
-    { label: 'Paid via Razorpay', done: true },
-  ]
 
   return (
     <div className="mx-auto max-w-xl">
-      <div className="panel p-8 text-center">
-        {/* badge */}
-        <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full border border-mint/40 bg-mint/10 shadow-glow-mint">
-          <span className="text-4xl text-mint">✓</span>
+      <div className="card p-8 text-center">
+        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-50">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+            <path d="M5 12l4 4L19 7" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </div>
 
-        <h1 className="text-2xl font-extrabold tracking-tight text-white">Order confirmed</h1>
-        <p className="mt-2 text-slate-400">
-          Your purchase from <strong className="text-white">{merchant}</strong> has been negotiated, approved &amp; paid.
+        <h1 className="text-xl font-semibold text-gray-900">Order placed</h1>
+        <p className="mt-1 text-sm text-gray-500">
+          Thanks — your order from <span className="font-medium text-gray-800">{merchant}</span> is confirmed.
         </p>
 
-        {/* order card */}
-        <div className="mt-6 rounded-xl border border-ink-700 bg-ink-850 p-5 text-left">
-          <div className="flex items-start justify-between mb-4">
-            <div className="text-xs text-slate-500">
-              <div className="text-[10px] uppercase tracking-wider text-slate-600 mb-0.5">Order</div>
-              <span className="font-mono text-slate-300">#{shortId}</span>
+        <div className="mt-6 rounded-lg border border-gray-200 p-4 text-left">
+          <div className="mb-4 flex items-start justify-between">
+            <div>
+              <div className="text-[10px] uppercase tracking-wide text-gray-400">Order number</div>
+              <div className="font-mono text-sm text-gray-800">#{shortId}</div>
             </div>
-            <span className="chip bg-mint/10 text-mint">PAID</span>
+            <span className="tag bg-green-50 text-green-700">Paid</span>
           </div>
 
-          <div className="flex gap-4 mb-4">
-            <ProductArt kind={artKind(items)} size={80} className="shrink-0" />
-            <div className="min-w-0 flex-1">
-              <div className="font-semibold text-white">{merchant}</div>
-              <div className="mt-1 text-sm text-slate-300">
-                {items.length > 0
-                  ? items.map((i) => `${i.quantity} × ${itemName(i.item_id)}`).join(', ')
-                  : 'your items'}
+          <div className="flex gap-3">
+            <ProductArt kind={artKind(items)} size={64} className="shrink-0" />
+            <div className="flex-1">
+              <div className="text-sm font-medium text-gray-900">{merchant}</div>
+              <div className="text-xs text-gray-500">
+                {items.length > 0 ? items.map((i) => `${i.quantity} × ${itemName(i.item_id)}`).join(', ') : 'Your items'}
               </div>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-extrabold text-white">Rs {(total / 100).toFixed(0)}</div>
+              <div className="text-lg font-semibold text-gray-900">Rs {(total / 100).toFixed(0)}</div>
               {discounts.length > 0 && (
-                <div className="text-xs text-mint">
+                <div className="text-xs text-green-700">
                   − Rs {discounts.reduce((s, d) => s + d.amount_paise, 0) / 100} saved
                 </div>
               )}
             </div>
           </div>
-
-          {/* line items */}
-          {items.length > 1 && (
-            <div className="border-t border-ink-700 pt-3 space-y-1 text-xs text-slate-400">
-              {items.map((it) => (
-                <div key={it.item_id} className="flex justify-between">
-                  <span>{it.quantity} × {itemName(it.item_id)}</span>
-                  <span>Rs {((subtotal / items.reduce((s, i) => s + i.quantity, 0)) * it.quantity / 100).toFixed(0)}</span>
-                </div>
-              ))}
-              {discounts.map((d) => (
-                <div key={d.rule} className="flex justify-between text-mint">
-                  <span>{d.rule}</span>
-                  <span>− Rs {(d.amount_paise / 100).toFixed(0)}</span>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
 
-        {/* steps */}
-        <div className="mt-6 flex items-center justify-center gap-2">
-          {steps.map((s, i) => (
-            <div key={s.label} className="flex items-center gap-2">
-              <span className="flex items-center gap-1.5 text-xs font-medium text-mint">
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-mint/10 text-[10px] text-mint">✓</span>
-                {s.label}
-              </span>
-              {i < steps.length - 1 && <span className="text-ink-600">→</span>}
-            </div>
-          ))}
-        </div>
+        {auditMsg && <p className="mt-3 text-xs text-gray-400">Verified on-chain: {auditMsg}</p>}
 
-        {auditMsg && (
-          <p className="mt-3 text-xs text-slate-500">
-            audit: <span className="text-slate-400">{auditMsg}</span>
-          </p>
-        )}
-
-        {/* buttons */}
-        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Link to="/" className="btn-ghost">
+        <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <Link to="/" className="btn-primary">
             Back to shop
           </Link>
           {sessionId && (
-            <Link to={`/theatre?session=${sessionId}`} className="btn-ghost text-xs">
-              view negotiation in theatre
+            <Link to={`/theatre?session=${sessionId}`} className="btn-ghost">
+              View audit trail
             </Link>
           )}
         </div>
@@ -132,7 +87,6 @@ export default function SuccessPage() {
 
 function artKind(items: { item_id: string }[]): 'mug' | 'bowl' | 'plate' | 'candle' {
   const id = items[0]?.item_id ?? ''
-  if (['mug', 'bowl', 'plate', 'candle'].includes(id.split('_')[0])) return id.split('_')[0] as any
   if (id.includes('candle')) return 'candle'
   if (id.includes('bowl')) return 'bowl'
   if (id.includes('plate')) return 'plate'
